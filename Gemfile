@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'sinatra'
+gem 'gdbm'	# database
 
 group :test, :development do
 	gem 'rspec'

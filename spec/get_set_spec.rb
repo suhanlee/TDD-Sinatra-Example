@@ -2,7 +2,7 @@ require File.expand_path '../spec_helper.rb', __FILE__
 
 describe 'get_set_test' do
   it "should set value" do
-    name = "test3"
+    name = "test"
     value = "1"
 
     get "/set/#{name}/#{value}"

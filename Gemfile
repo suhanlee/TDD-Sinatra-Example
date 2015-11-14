@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'sinatra'
-gem 'gdbm'	# database
+gem 'ffi'
 
 group :test, :development do
 	gem 'rspec'

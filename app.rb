@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'gdbm'
+require 'json'
 
 configure :development do
 	use Rack::Reloader
@@ -14,23 +15,44 @@ class SimpleApp < Sinatra::Base
 	end
 
 	get '/set/:name/:value' do
-
 		name = params[:name]
 		value = params[:value]
 
-		gdbm = GDBM.new("db/keyvalue.db")
-		gdbm["#{name}"] = value
-		gdbm.close
+		begin
+			gdbm = GDBM.new("db/keyvalue.db")
+			gdbm["#{name}"] = value
+			gdbm.close
+		rescue Exception => e
+			puts e.message
+			puts e.backtrace.inspect
+		end
 
 		"{ #{name}: #{value} }"
 	end
 
 	get '/get/:name' do
 		name = params[:name]
-		gdbm = GDBM.new("db/keyvalue.db")
-		value = gdbm["#{name}"]
-		gdbm.close
+
+		begin
+			gdbm = GDBM.new("db/keyvalue.db")
+			value = gdbm["#{name}"]
+			gdbm.close
+		rescue Exception => e
+			puts e.message
+			puts e.backtrace.inspect
+		end
 
 		"{ #{name}: #{value} }"
+	end
+
+	post '/json' do
+		begin
+			payload = JSON.parse(request.body.read)
+			payload.to_json
+		rescue Exception => e
+			puts e.message
+			puts e.backtrace.inspect
+		end
+
 	end
 end

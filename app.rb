@@ -7,6 +7,15 @@ configure :development do
 end
 
 class SimpleApp < Sinatra::Base
+
+	before '/hash/*' do
+		@gdbm = GDBM.new("db/keyvalue.db")
+	end
+
+	after '/hash/*' do
+		@gdbm.close
+	end
+
 	get '/' do
 	end
 
@@ -14,14 +23,12 @@ class SimpleApp < Sinatra::Base
 		"hello"
 	end
 
-	get '/set/:name/:value' do
+	get '/hash/set/:name/:value' do
 		name = params[:name]
 		value = params[:value]
 
 		begin
-			gdbm = GDBM.new("db/keyvalue.db")
-			gdbm["#{name}"] = value
-			gdbm.close
+			@gdbm["#{name}"] = value
 		rescue Exception => e
 			puts e.message
 			puts e.backtrace.inspect
@@ -30,13 +37,11 @@ class SimpleApp < Sinatra::Base
 		"{ #{name}: #{value} }"
 	end
 
-	get '/get/:name' do
+	get '/hash/get/:name' do
 		name = params[:name]
 
 		begin
-			gdbm = GDBM.new("db/keyvalue.db")
-			value = gdbm["#{name}"]
-			gdbm.close
+			value = @gdbm["#{name}"]
 		rescue Exception => e
 			puts e.message
 			puts e.backtrace.inspect

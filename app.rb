@@ -7,7 +7,7 @@ configure :development do
 end
 
 class SimpleApp < Sinatra::Base
-	enable :sessions
+	enable :sessions unless test?
 
 	before '/hash/*' do
 		@gdbm = GDBM.new("db/keyvalue.db")

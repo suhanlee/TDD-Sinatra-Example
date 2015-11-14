@@ -7,6 +7,7 @@ configure :development do
 end
 
 class SimpleApp < Sinatra::Base
+	enable :sessions
 
 	before '/hash/*' do
 		@gdbm = GDBM.new("db/keyvalue.db")
@@ -58,6 +59,18 @@ class SimpleApp < Sinatra::Base
 			puts e.message
 			puts e.backtrace.inspect
 		end
+	end
 
+	get '/session/:name' do
+		name = params[:name]
+		session[name].to_s
+	end
+
+	post '/session/:name/:data' do
+		name = params[:name]
+		data = params[:data]
+		session[name] = data
+
+		session[name].to_s
 	end
 end

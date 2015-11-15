@@ -137,4 +137,24 @@ class SimpleApp < Sinatra::Base
 		status
 	end
 
+	post '/upload/:filename' do
+		begin
+			filename = params[:filename]
+			tempfile = params[:file][:tempfile]
+			save_dir = "./upload"
+
+			FileUtils.mkdir_p(save_dir) unless File.exists?(save_dir)
+			filename = File.join(save_dir, filename)
+			File.open(filename, 'wb') do |file|
+				file.write(tempfile.read)
+			end
+
+			status = {:status => 200}.to_json
+		rescue Exception => e
+			status = {:error_message => e.message, :status => 500}.to_json
+		end
+
+		status
+	end
+
 end

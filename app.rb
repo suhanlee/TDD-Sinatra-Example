@@ -7,154 +7,154 @@ require 'sinatra/activerecord'
 require './model/article'
 
 configure :development do
-	use Rack::Reloader
+  use Rack::Reloader
 end
 
 class SimpleApp < Sinatra::Base
-	register Sinatra::ActiveRecordExtension
+  register Sinatra::ActiveRecordExtension
 
-	set :database, {adapter: "sqlite3", database: "database.sqlite3"}
+  set :database, {adapter: "sqlite3", database: "database.sqlite3"}
 
-	enable :sessions unless test?
+  enable :sessions unless test?
 
-	before '/hash/*' do
-		@gdbm = GDBM.new("db/keyvalue.db")
-	end
+  before '/hash/*' do
+    @gdbm = GDBM.new("db/keyvalue.db")
+  end
 
-	after '/hash/*' do
-		@gdbm.close
-	end
+  after '/hash/*' do
+    @gdbm.close
+  end
 
-	get '/' do
-	end
+  get '/' do
+  end
 
-	get '/hello' do
-		"hello"
-	end
+  get '/hello' do
+    "hello"
+  end
 
-	get '/hash/set/:name/:value' do
-		name = params[:name]
-		value = params[:value]
+  get '/hash/set/:name/:value' do
+    name = params[:name]
+    value = params[:value]
 
-		begin
-			@gdbm["#{name}"] = value
-		rescue Exception => e
-			puts e.message
-			puts e.backtrace.inspect
-		end
+    begin
+      @gdbm["#{name}"] = value
+    rescue Exception => e
+      puts e.message
+      puts e.backtrace.inspect
+    end
 
-		"{ #{name}: #{value} }"
-	end
+    "{ #{name}: #{value} }"
+  end
 
-	get '/hash/get/:name' do
-		name = params[:name]
+  get '/hash/get/:name' do
+    name = params[:name]
 
-		begin
-			value = @gdbm["#{name}"]
-		rescue Exception => e
-			puts e.message
-			puts e.backtrace.inspect
-		end
+    begin
+      value = @gdbm["#{name}"]
+    rescue Exception => e
+      puts e.message
+      puts e.backtrace.inspect
+    end
 
-		"{ #{name}: #{value} }"
-	end
+    "{ #{name}: #{value} }"
+  end
 
-	post '/json' do
-		begin
-			payload = JSON.parse(request.body.read)
-			payload.to_json
-		rescue Exception => e
-			puts e.message
-			puts e.backtrace.inspect
-		end
-	end
+  post '/json' do
+    begin
+      payload = JSON.parse(request.body.read)
+      payload.to_json
+    rescue Exception => e
+      puts e.message
+      puts e.backtrace.inspect
+    end
+  end
 
-	get '/session/:name' do
-		name = params[:name]
-		session[name].to_s
-	end
+  get '/session/:name' do
+    name = params[:name]
+    session[name].to_s
+  end
 
-	post '/session/:name/:data' do
-		name = params[:name]
-		data = params[:data]
-		session[name] = data
+  post '/session/:name/:data' do
+    name = params[:name]
+    data = params[:data]
+    session[name] = data
 
-		session[name].to_s
-	end
+    session[name].to_s
+  end
 
-	post '/article/new' do
-		body = JSON.parse(request.body.read)
+  post '/article/new' do
+    body = JSON.parse(request.body.read)
 
-		article = Article.new(body)
-		if article.save
-			status = {:article => article, :status => 200}.to_json
-		else
-			status = {:article => body, :status => 500}.to_json
-		end
-	end
+    article = Article.new(body)
+    if article.save
+      status = {:article => article, :status => 200}.to_json
+    else
+      status = {:article => body, :status => 500}.to_json
+    end
+  end
 
-	get '/article/:id' do
-		id = params[:id]
-		begin
-			article = Article.find(id)
-			status = {:article => article, :status => 200}.to_json
-		rescue Exception => e
-			status = {:error_message => e.message, :status => 500}.to_json
-		end
+  get '/article/:id' do
+    id = params[:id]
+    begin
+      article = Article.find(id)
+      status = {:article => article, :status => 200}.to_json
+    rescue Exception => e
+      status = {:error_message => e.message, :status => 500}.to_json
+    end
 
-		status
-	end
+    status
+  end
 
-	post '/article/edit/:id' do
-		payload = JSON.parse(request.body.read)
+  post '/article/edit/:id' do
+    payload = JSON.parse(request.body.read)
 
-		id = params[:id]
-		begin
-			article = Article.find(id)
-			article.name = payload["name"]
-			article.subject = payload["subject"] if payload["subject"] != nil
-			article.contents = payload["contents"]
-			article.save
+    id = params[:id]
+    begin
+      article = Article.find(id)
+      article.name = payload["name"]
+      article.subject = payload["subject"] if payload["subject"] != nil
+      article.contents = payload["contents"]
+      article.save
 
-			status = {:article => article, :status => 200}.to_json
-		rescue Exception => e
-			status = {:error_message => e.message, :status => 500}.to_json
-		end
+      status = {:article => article, :status => 200}.to_json
+    rescue Exception => e
+      status = {:error_message => e.message, :status => 500}.to_json
+    end
 
-		status
-	end
+    status
+  end
 
-	delete '/article/:id' do
-		id = params[:id]
-		begin
-			article = Article.find(id)
-			article.destroy
-			status = {:status => 200}.to_json
-		rescue Exception => e
-			status = {:error_message => e.message, :status => 500}.to_json
-		end
+  delete '/article/:id' do
+    id = params[:id]
+    begin
+      article = Article.find(id)
+      article.destroy
+      status = {:status => 200}.to_json
+    rescue Exception => e
+      status = {:error_message => e.message, :status => 500}.to_json
+    end
 
-		status
-	end
+    status
+  end
 
-	post '/upload/:filename' do
-		begin
-			filename = params[:filename]
-			tempfile = params[:file][:tempfile]
-			save_dir = "./upload"
+  post '/upload/:filename' do
+    begin
+      filename = params[:filename]
+      tempfile = params[:file][:tempfile]
+      save_dir = "./upload"
 
-			FileUtils.mkdir_p(save_dir) unless File.exists?(save_dir)
-			filename = File.join(save_dir, filename)
-			File.open(filename, 'wb') do |file|
-				file.write(tempfile.read)
-			end
+      FileUtils.mkdir_p(save_dir) unless File.exists?(save_dir)
+      filename = File.join(save_dir, filename)
+      File.open(filename, 'wb') do |file|
+        file.write(tempfile.read)
+      end
 
-			status = {:status => 200}.to_json
-		rescue Exception => e
-			status = {:error_message => e.message, :status => 500}.to_json
-		end
+      status = {:status => 200}.to_json
+    rescue Exception => e
+      status = {:error_message => e.message, :status => 500}.to_json
+    end
 
-		status
-	end
+    status
+  end
 
 end

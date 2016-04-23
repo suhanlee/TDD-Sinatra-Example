@@ -2,6 +2,7 @@
 TDD(Test Driven Development) 방법론으로 Sinatra Project를 만들때 참고할만한 예제 및 가이드 정보를 작성한 것입니다.
 
 # Example
+- [rspec-01](https://github.com/suhanlee/TDD-Sinatra-Example/tree/master/rspec-01)
 
 ## 변경사항에 대한 파일 자동 로딩
 ```ruby

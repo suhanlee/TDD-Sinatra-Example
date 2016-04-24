@@ -119,6 +119,69 @@ end
 set :database, {adapter: "sqlite3", database: "database.sqlite3"}
 ```
 
+## Logging
+```ruby
+# default enable
+get '/' do
+  logger.info "loading data"
+  # ...
+end
+
+# 
+class MyApp < Sinatra::Base
+	configure :production, :development do
+		enable :logging
+	end
+end
+```
+
+## Filters
+```ruby
+before do
+  @note = 'Hi!'
+  request.path_info = '/foo/bar/baz'
+end
+
+get '/foo/*' do
+  @note #=> 'Hi!'
+  params['splat'] #=> 'bar/baz'
+end
+```
+
+## Halting & PASS
+```ruby
+# Halt
+halt
+halt 410
+halt 'this will be the body
+halt 401, 'go away!'
+halt 402, { 'Content-Type' => 'text/plain' }, 'revenge'
+halt erb(:error)
+
+# Pass
+get '/guess/:who' do
+  pass unless params['who'] == 'Frank'
+  'You got me!'
+end
+
+get '/guess/*' do
+  'You missed!'
+end
+```
+
+## Helpers
+```ruby
+helpers do
+  def bar(name)
+    "#{name}bar"
+  end
+end
+
+get '/:name' do
+  bar(params['name'])
+end
+```
+
 ## Session 사용
 ```ruby
 # app.rb
@@ -138,4 +201,131 @@ begin
 rescue Exception => e
 	puts e.message
 	puts e.backtrace.inspect
+```
+## Route
+```ruby
+get '/' do
+  .. show something ..
+end
+
+post '/' do
+  .. create something ..
+end
+
+put '/' do
+  .. replace something ..
+end
+
+patch '/' do
+  .. modify something ..
+end
+
+delete '/' do
+  .. annihilate something ..
+end
+
+options '/' do
+  .. appease something ..
+end
+
+link '/' do
+  .. affiliate something ..
+end
+
+unlink '/' do
+  .. separate something ..
+end
+```
+
+##  Route Pattern
+```ruby
+
+get '/download/*.*' do |path, ext|
+  [path, ext] # => ["path/to/file", "xml"]
+end
+
+get /\A\/hello\/([\w]+)\z/ do
+  "Hello, #{params['captures'].first}!"
+end
+
+get '/posts.?:format?' do
+	# matches "GET /posts" and any extention "GET /posts.json", GET /posts.xml" etc
+ed
+```
+## Staic Files
+```ruby
+set :public_folder, File.dirname(__FILE__) + '/static'
+```
+
+## Views Path
+```ruby
+set :views, settings.root + '/templates'
+```
+
+## Accessing Variables in Templates
+```ruby
+get '/:id' do
+  @foo = Foo.find(params['id'])
+  haml '%h1= @foo.name'
+end
+
+get '/:id' do
+  foo = Foo.find(params['id'])
+  haml '%h1= bar.name', :locals => { :bar => foo }
+end
+
+```
+
+## Inline Templates
+```ruby
+require 'sinatra'
+
+get '/' do
+	haml :index
+end
+
+__END__
+@@ layout
+%html
+= yield
+@@ index
+%div.title hello world.
+```
+ 
+## Named Templates
+```ruby
+template :layout do
+  "%html\n  =yield\n"
+end
+
+template :index do
+  '%div.title Hello World!'
+end
+
+get '/' do
+  haml :index
+end
+```
+
+## Template Language
+```ruby
+require 'rdiscount'
+get('/') { markdown :index }
+```
+
+## Templates with yield and nested layouts
+```ruby
+erb :post, :layout => false do
+	erb :index
+end
+
+erb :main_layout, :layout => false do
+  erb :admin_layout do
+    erb :user
+  end
+end
+
+erb :admin_layout, :layout => :main_layout do
+  erb :user
+end
 ```

@@ -7,9 +7,20 @@ TDD(Test Driven Development) 방법론으로 Sinatra Project를 만들때 참고
 
 ## 변경사항에 대한 파일 자동 로딩
 ```ruby
-configure :development do
-	use Rack::Reloader
-end
+# Gemfile
+gem install sinatra-contrib
+
+# classic
+require "sinatra"
+require "sinatra/reloader" if development?
+...
+
+# modular
+class MyApp < Sinatra::Base
+	configure :development do
+		use Rack::Reloader
+	end
+emd
 ```
 
 ## RSpec & Rack Test사용

@@ -58,4 +58,11 @@ describe 'Board Path (/new)' do
     body = @browser.last_response.body
     include_eq(body, CONTENTS_FORM_FIELD)
   end
+
+  it "post article in new page" do
+    @browser.post '/new', :author => 'suhanlee', :subject => 'subject01', :contents => 'contents'
+    body = @browser.last_response.body
+    include_eq(body, 'new article saved.')
+    include_eq(body, 'success')
+  end
 end

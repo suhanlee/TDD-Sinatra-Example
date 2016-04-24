@@ -69,9 +69,3 @@ delete '/delete/:id' do
     erb :deleted, :locals => { :result => "error"}
   end
 end
-
-__END__
-@@ layout
-<html>
-<%= yield %>
-</html>

@@ -329,3 +329,40 @@ erb :admin_layout, :layout => :main_layout do
   erb :user
 end
 ```
+
+## Stramming Responses
+```ruby
+# exam1
+get '/' do
+  stream do |out|
+    out << "It's gonna be legen -\n"
+    sleep 0.5
+    out << " (wait for it) \n"
+    sleep 1
+    out << "- dary!\n"
+  end
+end
+
+# exam2
+set :server, :thin
+connections = []
+
+get '/subscribe' do
+	stream(:keep_open) do |out|
+		connections << out
+		connections.reject!(&:closed?)
+	end
+end
+
+post '/:message' do
+	connections.each do |out|
+		out << params['message'] << "\n"
+		
+		# indicate client to connect again
+		out.close
+	end
+	
+	# acknowledge
+	"message received"
+end
+```

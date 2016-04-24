@@ -13,4 +13,7 @@
 # Edit 기능 추가(c)
 # edit template 분리(c)
 
-# Delete 기능 추가
+# Delete 기능 추가(c)
+# article contents 에 Markdown 기능 추가(c)
+
+# Layout view template 으로 분리

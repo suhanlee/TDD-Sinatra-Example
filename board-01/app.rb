@@ -8,6 +8,12 @@ set :database, {adapter: "sqlite3", database: "database.sqlite3"}
 get '/' do
   @total_article = Article.count
   @articles = Article.all
+
+  for article in @articles
+    template = BlueCloth::new(article.contents)
+    article.contents = template.to_html
+  end
+
   erb :index
 end
 

@@ -8,6 +8,8 @@ gem 'sqlite3'
 
 gem 'sinatra-contrib'
 
+gem 'bluecloth'
+
 group :test do
   gem 'rack-test'
 end

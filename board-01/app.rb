@@ -15,6 +15,12 @@ get '/new' do
   erb :new
 end
 
+get '/edit/:id' do
+  @id = params[:id]
+  @article = Article.find(@id)
+  erb :edit
+end
+
 post '/new' do
   author = params[:author]
   subject = params[:subject]
@@ -29,17 +35,27 @@ post '/new' do
   end
 end
 
+post '/edit/:id' do
+  id = params[:id]
+  author = params[:author]
+  subject = params[:subject]
+  contents = params[:contents]
+
+  article = Article.find(id)
+  article.author = author
+  article.subject = subject
+  article.contents = contents
+
+  if article.save
+    erb :created, :locals => { :result => "success" }
+    redirect to('/')
+  else
+    erb :created, :locals => { :result => "error" }
+  end
+end
+
 __END__
 @@ layout
 <html>
 <%= yield %>
 </html>
-
-@@ new
-new
-<form action="/new" method="POST">
-<input type="text" name="author">
-<input type="text" name="subject">
-<textarea name="contents"></textarea>
-<input type="submit" value="send">
-</form>

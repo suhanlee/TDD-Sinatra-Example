@@ -1,0 +1,7 @@
+edit
+<form action="/edit/<%= @id %>" method="POST">
+  <input type="text" name="author" value="<%= @article.author %>">
+  <input type="text" name="subject" value="<%= @article.subject %>">
+  <textarea name="contents"><%= @article.contents %></textarea>
+  <input type="submit" value="send">
+</form>

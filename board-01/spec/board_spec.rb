@@ -51,7 +51,36 @@ describe 'Board Path (/new)' do
 
     post '/new', :author => test_author,
          :subject => test_subject,
-         :test_contents => test_contents
+         :contents => test_contents
+
+    expect(last_response).to be_redirect
+    follow_redirect!
+    expect(last_request.url).to eq('http://example.org/')
+  end
+end
+
+describe 'Board Path(/edit)' do
+  it 'get edit article page' do
+    target_id = 1
+    article = Article.find(target_id)
+    author = article.author
+    subject = article.subject
+    contents = article.contents
+
+    get '/edit/' + target_id.to_s
+    expect(last_response.body).to include(author)
+    expect(last_response.body).to include(subject)
+    expect(last_response.body).to include(contents)
+  end
+
+  it 'post edit article page' do
+    author = 'test author'
+    subject = 'test subject'
+    contents = 'test contents'
+
+    post '/edit/1', :author => author,
+         :subject => subject,
+         :contents => contents
 
     expect(last_response).to be_redirect
     follow_redirect!

@@ -16,6 +16,9 @@ total: <%= @total_article %>
     <td>
       contents
     </td>
+    <td>
+      edit
+    </td>
   </tr>
   <% for article in @articles %>
       <tr>
@@ -27,6 +30,9 @@ total: <%= @total_article %>
         </td>
         <td>
           <%= article.contents %>
+        </td>
+        <td>
+          <a href="/edit/<%= article.id %>">Edit</a>
         </td>
       </tr>
   <% end %>

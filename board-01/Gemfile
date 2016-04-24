@@ -6,6 +6,8 @@ gem 'sinatra-activerecord'
 gem 'rake'
 gem 'sqlite3'
 
+gem 'sinatra-contrib'
+
 group :test do
   gem 'rack-test'
 end

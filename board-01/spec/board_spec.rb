@@ -12,6 +12,14 @@ describe 'Board Path (/)' do
     get '/'
     expect(last_response.body).to include(NEW_LINK)
   end
+
+  it "show totla article number field" do
+    article_count = Article.count
+    TOTAL_ARTICLE = "total: " + article_count.to_s
+
+    get '/'
+    expect(last_response.body).to include(TOTAL_ARTICLE)
+  end
 end
 
 describe 'Board Path (/new)' do

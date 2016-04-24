@@ -1,0 +1,33 @@
+index
+total: <%= @total_article %>
+<p>
+  <a href="/new">New</a>
+</p>
+
+
+<table border="1">
+  <tr>
+    <td>
+      author
+    </td>
+    <td>
+      subject
+    </td>
+    <td>
+      contents
+    </td>
+  </tr>
+  <% for article in @articles %>
+      <tr>
+        <td>
+          <%= article.author %>
+        </td>
+        <td>
+          <%= article.subject %>
+        </td>
+        <td>
+          <%= article.contents %>
+        </td>
+      </tr>
+  <% end %>
+</table>

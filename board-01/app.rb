@@ -1,14 +1,13 @@
 require 'sinatra'
+require 'sinatra/reloader' if development?
 require 'sinatra/activerecord'
 require './model/article'
-
-configure :development do
-  use Rack::Reloader
-end
 
 set :database, {adapter: "sqlite3", database: "database.sqlite3"}
 
 get '/' do
+  @total_article = Article.count
+  @articles = Article.all
   erb :index
 end
 
@@ -36,10 +35,6 @@ __END__
 <%= yield %>
 </html>
 
-@@ index
-index
-<a href="/new">New</a>
-
 @@ new
 new
 <form action="/new" method="POST">
@@ -48,7 +43,3 @@ new
 <textarea name="contents"></textarea>
 <input type="submit" value="send">
 </form>
-
-@@ created
-new article saved.
-<%= result %>

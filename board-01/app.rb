@@ -24,6 +24,7 @@ post '/new' do
   article = Article.new(:author => author, :subject => subject, :contents => contents)
   if article.save
     erb :created, :locals => { :result => "success" }
+    redirect to('/')
   else
     erb :created, :locals => { :result => "error" }
   end

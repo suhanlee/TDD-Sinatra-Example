@@ -7,4 +7,6 @@
 # 성공시 success, 실패시 error 표시(c)
 # sqlite 로 데이터 저장(c)
 
+# Rack Test 방식에서 rspec 으로 변경(c)
+
 # app.rb 에 있는 view teamplte 분리

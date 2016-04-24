@@ -1,68 +1,52 @@
 require File.expand_path '../spec_helper.rb', __FILE__
 
-module Helpers
-  def include_eq(body, included)
-    expect(body.include?(included)).to eq(true)
-  end
-end
-
-RSpec.configure do |c|
-  c.include Helpers
-end
-
 describe 'Board Path (/)' do
-
-  before(:each) do
-    @browser = Rack::Test::Session.new(Rack::MockSession.new(Sinatra::Application))
-  end
-
   it "should return index string" do
-    @browser.get '/'
-    body = @browser.last_response.body
-    include_eq(body, 'index')
+    get '/'
+    expect(last_response.body).to include('index')
   end
 
   it "find new page link" do
     NEW_LINK = '<a href="/new">New</a>'
-    @browser.get '/'
-    body = @browser.last_response.body
-    include_eq(body, NEW_LINK)
+
+    get '/'
+    expect(last_response.body).to include(NEW_LINK)
   end
 end
 
 describe 'Board Path (/new)' do
-  before(:each) do
-    @browser = Rack::Test::Session.new(Rack::MockSession.new(Sinatra::Application))
-  end
-
   it "find form field in new page" do
     AUTHOR_FORM_FIELD = '<input type="text" name="author">'
 
-    @browser.get '/new'
-    body = @browser.last_response.body
-    include_eq(body, AUTHOR_FORM_FIELD)
+    get '/new'
+    expect(last_response.body).to include(AUTHOR_FORM_FIELD)
   end
 
   it "find subject form in new page" do
     SUBJECT_FORM_FIELD = '<input type="text" name="subject">'
 
-    @browser.get '/new'
-    body = @browser.last_response.body
-    include_eq(body, SUBJECT_FORM_FIELD)
+    get '/new'
+    expect(last_response.body).to include(SUBJECT_FORM_FIELD)
   end
 
   it "find contents form in new page" do
     CONTENTS_FORM_FIELD = '<textarea name="contents"></textarea>'
 
-    @browser.get '/new'
-    body = @browser.last_response.body
-    include_eq(body, CONTENTS_FORM_FIELD)
+    get '/new'
+    expect(last_response.body).to include(CONTENTS_FORM_FIELD)
   end
 
-  it "post article in new page" do
-    @browser.post '/new', :author => 'suhanlee', :subject => 'subject01', :contents => 'contents'
-    body = @browser.last_response.body
-    include_eq(body, 'new article saved.')
-    include_eq(body, 'success')
+  it "after posting article, redirect to index page" do
+    test_author = 'test author'
+    test_subject = 'test subject'
+    test_contents = 'test contents'
+
+    post '/new', :author => test_author,
+         :subject => test_subject,
+         :test_contents => test_contents
+
+    expect(last_response).to be_redirect
+    follow_redirect!
+    expect(last_request.url).to eq('http://example.org/')
   end
 end

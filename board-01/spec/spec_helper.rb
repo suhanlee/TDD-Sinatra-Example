@@ -1,5 +1,4 @@
 require 'rack/test'
-require 'test/unit'
 require 'rspec'
 
 ENV['RACK_ENV'] = 'test'
@@ -12,6 +11,6 @@ RSpec.configure do |config|
 	include Rack::Test::Methods
 
 	def app
-		BoardApp
+		Sinatra::Application
 	end
 end

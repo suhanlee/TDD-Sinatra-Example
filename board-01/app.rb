@@ -54,6 +54,16 @@ post '/edit/:id' do
   end
 end
 
+delete '/delete/:id' do
+  id = params[:id]
+  article = Article.find(id)
+  if  article.delete
+    redirect to('/')
+  else
+    erb :deleted, :locals => { :result => "error"}
+  end
+end
+
 __END__
 @@ layout
 <html>

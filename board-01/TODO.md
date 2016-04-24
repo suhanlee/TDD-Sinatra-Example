@@ -13,4 +13,4 @@
 # Edit 기능 추가(c)
 # edit template 분리(c)
 
-
+# Delete 기능 추가

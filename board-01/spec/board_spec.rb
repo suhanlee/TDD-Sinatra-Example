@@ -61,7 +61,7 @@ end
 
 describe 'Board Path(/edit)' do
   it 'get edit article page' do
-    target_id = 1
+    target_id = Article.first.id
     article = Article.find(target_id)
     author = article.author
     subject = article.subject
@@ -74,13 +74,26 @@ describe 'Board Path(/edit)' do
   end
 
   it 'post edit article page' do
+    target_id = Article.first.id
+
     author = 'test author'
     subject = 'test subject'
     contents = 'test contents'
 
-    post '/edit/1', :author => author,
+    post '/edit/' + target_id.to_s, :author => author,
          :subject => subject,
          :contents => contents
+
+    expect(last_response).to be_redirect
+    follow_redirect!
+    expect(last_request.url).to eq('http://example.org/')
+  end
+
+  it 'delete article page' do
+    article = Article.first
+    id = article.id
+
+    delete '/delete/' + id.to_s
 
     expect(last_response).to be_redirect
     follow_redirect!

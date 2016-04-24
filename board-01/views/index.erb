@@ -19,6 +19,9 @@ total: <%= @total_article %>
     <td>
       edit
     </td>
+    <td>
+      delete
+    </td>
   </tr>
   <% for article in @articles %>
       <tr>
@@ -33,6 +36,12 @@ total: <%= @total_article %>
         </td>
         <td>
           <a href="/edit/<%= article.id %>">Edit</a>
+        </td>
+        <td>
+          <form method="post" action="/delete/<%= article.id %>">
+            <input type="hidden" name="_method" value="delete">
+            <button type="submit">Delete</button>
+          </form>
         </td>
       </tr>
   <% end %>

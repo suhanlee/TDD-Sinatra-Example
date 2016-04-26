@@ -5,11 +5,12 @@ TDD(Test Driven Development) 방법론으로 Sinatra Project를 만들때 참고
 - [rspec-01](https://github.com/suhanlee/TDD-Sinatra-Example/tree/master/rspec-01)
 - [mock-01](https://github.com/suhanlee/TDD-Sinatra-Example/tree/master/mock-01)
 - [board-01](https://github.com/suhanlee/TDD-Sinatra-Example/tree/master/board-01)
+- [login-01](https://github.com/suhanlee/TDD-Sinatra-Example/tree/master/login-01)
 
 ## 변경사항에 대한 파일 자동 로딩
 ```ruby
 # Gemfile
-gem install sinatra-contrib
+gem 'sinatra-contrib'
 
 # classic
 require "sinatra"
